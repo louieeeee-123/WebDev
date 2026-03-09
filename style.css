@@ -7,12 +7,24 @@
 
 /* Gallery hide/show */
 #gallery-section {
-    display: block;
-    background-color: #fbeadf;
-    padding: 20px;
-    border-radius: 30px;
-    margin-bottom: 30px;
-    border: 2px solid #ac190c;
+   background-color: #fffaf0;
+    padding: 2rem 1.5rem 3rem;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    border-top: 8px double #d64545;
+    margin-top: 60px;
+}
+.recipe-collection {
+    background-color: #fffaf0;
+    background-image: url('background.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 3rem 1.5rem 3rem;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    border-top: 8px double #d64545;
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
 }
 
 #gallery-section:has(~ #strawberry-page:target),
