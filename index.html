@@ -1,215 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sweet Bites · recipe collection</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Treats · recipe collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px;
+        }
+
+        body {
+            background-color: #FFE39B;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        .landing-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .border-top, 
+        .border-bottom {
+            width: 100%;
+            height: 180px; 
+            background-repeat: repeat-x, repeat-x;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .border-top {
+            background-image: url('lace-top.png'), url('gingham-border.png');
+            background-size: auto 50%, auto 150px;
+            background-position: bottom left, top left;
+        }
+
+        .border-bottom {
+            background-image: url('lace-bottom.png'), url('gingham-border.png');
+            background-size: auto 50%, auto 147px;
+            background-position: top left, bottom left;
+        }
+
+        .main-content {
+            flex-grow: 1; 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: -30px; 
+            margin-bottom: -30px;
+            z-index: 5;
+            position: relative;
+        }
+
+        .image-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            z-index: -1;
+        }
+
+        .image-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            filter: sepia(10%) brightness(105%);
+        }
+
+        .hero-text {
+            text-align: center;
+            padding: 20px;
+            color: #d64545;
+            font-family: 'Cursive', 'Segoe Script', cursive, sans-serif;
+            background-color: rgba(255, 227, 175, 0.7);
+            border-radius: 60px;
+            max-width: 700px;
+            margin: 0 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: #d64545;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            border: 2px solid #b32d2d;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #b32d2d;
+            transform: scale(1.03);
+        }
+
+        /* ===== RECIPE COLLECTION STYLES ===== */
+        .recipe-collection {
+            background-color: #fffaf0;
+            padding: 2rem 1.5rem 3rem;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            border-top: 8px double #d64545;
+        }
+
+        #gallery-section {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            font-weight: 500;
+            text-align: center;
+            color: #a55151;
+            margin-bottom: 2rem;
+            font-family: 'Cursive', 'Segoe Script', cursive;
+            letter-spacing: 2px;
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .column1, .column2, .column3 {
+            flex: 1 1 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .column1 div, .column2 div, .column3 div {
+            background: #ffffffd9;
+            border-radius: 40px 40px 20px 20px;
+            padding: 1.5rem 0.8rem 1rem;
+            box-shadow: 0 10px 18px rgba(170, 100, 80, 0.15);
+            transition: 0.25s ease;
+            text-align: center;
+            border: 2px solid #fad5b0;
+        }
+
+        .column1 div:hover, .column2 div:hover, .column3 div:hover {
+            transform: translateY(-6px);
+            border-color: #d68b8b;
+        }
+
+        .sample {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #ffeacb;
+            background: #fceae3;
+            box-shadow: 0 4px 8px #eec9b0;
+        }
+
+        .desc {
+            margin-top: 12px;
+            font-weight: 600;
+            color: #853b3b;
+            font-size: 1.2rem;
+            background: #ffefd6;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        /* recipe cards */
+        .recipe-card {
+            max-width: 900px;
+            margin: 3rem auto;
+            background: #fff9f0;
+            padding: 2.5rem 2.8rem;
+            border-radius: 70px 70px 40px 40px;
+            box-shadow: 0 20px 30px #eaccb9;
+            border: 3px solid #f8cfb0;
+            scroll-margin-top: 80px;
+        }
+
+        .recipe-card h1 {
+            color: #b14545;
+            font-size: 2.6rem;
+            border-bottom: 3px dotted #d6987a;
+            padding-bottom: 0.5rem;
+            font-family: 'Cursive', 'Segoe Script', cursive;
+        }
+
+        .recipe-card h2, .recipe-card h3 {
+            color: #974f4f;
+            margin: 1.2rem 0 0.6rem;
+            font-size: 1.9rem;
+        }
+
+        .recipe-card ul, .recipe-card ol {
+            margin-left: 1.6rem;
+            line-height: 1.7;
+            color: #2d1919;
+        }
+
+        .recipe-card li {
+            margin: 0.4rem 0;
+        }
+
+        .back-to-menu {
+            display: inline-block;
+            margin-top: 2rem;
+            background: #ebc7aa;
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            color: #4e2a2a;
+            font-weight: bold;
+            text-decoration: none;
+            border: 2px solid #d58e8e;
+            transition: 0.2s;
+        }
+
+        .back-to-menu:hover {
+            background: #dba985;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            color: #774343;
+            background: #ffe5c4;
+            border-top: 6px double #b16262;
+            font-size: 0.95rem;
+        }
+
+    </style>
 </head>
 <body>
-    <!-- GALLERY SECTION -->
-    <div id="gallery-section">
-        <p class="title">Select one to get recipe.</p>
-        <nav class="nav">
-            <section class="column1">
-                <div>
-                    <a href="#strawberry-page"><img class="sample" src="images/11.png" alt="Heart Jam Cookie"></a>
-                    <p class="desc">Strawberry Cake</p>
-                </div>
-                <div>
-                    <a href="#matcha-page"><img class="sample" src="images/44.png" alt="Strawberry Milk"></a>
-                    <p class="desc">Matcha Tiramisu</p>
-                </div>
-            </section>
-            <section class="column2">
-                <div>
-                    <a href="#apple-page"><img class="sample" src="images/33.png" alt="Breakfast Pancake"></a>
-                    <p class="desc">Spiced Apple Cake</p>
-                </div>
-            </section>
-            <section class="column3">
-                <div>
-                    <a href="#granola-page"><img class="sample" src="images/22.png" alt="Mango Shake"></a>
-                    <p class="desc">Granola Bars</p>
-                </div>
-                <div>
-                    <a href="#muffin-page"><img class="sample" src="images/55.5.png" alt="Chocolate Chip Cookie"></a>
-                    <p class="desc">Lemon Blueberry Muffins</p>
-                </div>
-            </section>
-        </nav>
+    <!-- LANDING SECTION -->
+    <div class="landing-page">
+        <div class="border-top"></div>
+
+        <div class="main-content">
+            <div class="image-background">
+                <img src="donut.jpg" alt="Image of Donuts by Heather Ford @ Unsplash">
+                <img src="crepe.jpg" alt="Image of Strawberry Crepe by joyfulcaptures @ Unsplash">
+                <img src="cupcake.jpg" alt="Image of Strawberry Cupcake by Deva Williamson @ Unsplash">
+            </div>
+
+            <div class="hero-text">
+                <h1>Do you love a sweet treat every now and then?<br>Looking for recipes to satisfy your cravings?</h1>
+                <a href="#gallery-section" class="btn">View recipes</a>
+            </div>
+        </div>
     </div>
+	<div style="height: 150px; background-color: #FFE39B; width: 100%;"></div>
+    <!-- RECIPE COLLECTION -->
+    <div class="recipe-collection">
+        <div id="gallery-section">
+            <p class="title">Select one to get recipe.</p>
+            <nav class="nav">
+                <section class="column1">
+                    <div>
+                        <a href="#strawberry-page"><img class="sample" src="strawberry-cake.jpg" alt="Heart Jam Cookie"></a>
+                        <p class="desc">Strawberry Cake</p>
+                    </div>
+                    <div>
+                        <a href="#matcha-page"><img class="sample" src="matcha-tiramisu.jpg" alt="Strawberry Milk"></a>
+                        <p class="desc">Matcha Tiramisu</p>
+                    </div>
+                </section>
+                <section class="column2">
+                    <div>
+                        <a href="#apple-page"><img class="sample" src="apple-cake.jpg" alt="Breakfast Pancake"></a>
+                        <p class="desc">Spiced Apple Cake</p>
+                    </div>
+                </section>
+                <section class="column3">
+                    <div>
+                        <a href="#granola-page"><img class="sample" src="granola-bar.jpg" alt="Mango Shake"></a>
+                        <p class="desc">Granola Bars</p>
+                    </div>
+                    <div>
+                        <a href="#muffin-page"><img class="sample" src="lemon-cake.jpg" alt="Chocolate Chip Cookie"></a>
+                        <p class="desc">Lemon Blueberry Muffins</p>
+                    </div>
+                </section>
+            </nav>
+        </div>
+        
+        <!-- RECIPE SECTIONS -->
+        <section id="strawberry-page" class="strawberry-page">
+            <section class="recipe-card">
+                <h1>Strawberry Cake</h1>
+                <h2>Ingredients</h2>
+                <p><b>For the shortcakes:</b></p>
+                <ul>
+                    <li>2 cups all-purpose flour</li>
+                    <li>1/4 cup granulated sugar</li>
+                    <li>1 tablespoon baking powder</li>
+                    <li>1/2 teaspoon salt</li>
+                    <li>1/2 cup unsalted butter, cold and cut into small cubes</li>
+                    <li>2/3 cup milk</li>
+                    <li>1 teaspoon vanilla extract</li>
+                </ul>
+                <p><b>For the strawberries</b></p>
+                <ul>
+                    <li>1 pound fresh strawberries</li>
+                    <li>2-3 tablespoons granulated sugar</li>
+                    <li>1 teaspoon lemon juice</li>
+                </ul>
+                <p><b>For the whipped cream:</b></p>
+                <ul>
+                    <li>1 cup heavy cream (chilled)</li>
+                    <li>2 tablespoons powdered sugar</li>
+                    <li>1 teaspoon vanilla extract</li>
+                </ul>
+                <h2>Steps</h2>
+                <ol>
+                    <li>Preheat oven to 425°F (220°C). Line a baking sheet with parchment paper or lightly grease it.</li>
+                    <li>In a large mixing bowl, whisk together the flour, sugar, baking powder, and salt.</li>
+                    <li>Add the cold cubed butter to the flour mixture. Using a pastry cutter or your fingertips, cut the butter into the flour until the mixture resembles coarse crumbs.</li>
+                    <li>In a separate bowl, mix together the milk and vanilla extract. Gradually pour the milk mixture into the flour mixture, stirring until just combined. Be careful not to overmix</li>
+                    <li>Turn the dough out onto a lightly floured surface. Gently pat the dough into a rectangle about 3/4 inch thick. Use a round cookie cutter or the rim of a glass to cut out circles of dough. Place the dough circles onto the prepared baking sheet, spacing them a few inches apart.</li>
+                    <li>Bake the shortcakes in the preheated oven for 12-15 minutes or until they are golden brown. Remove from the oven and transfer to a wire rack to cool completely.</li>
+                    <li>While the shortcakes are cooling, prepare the strawberries. In a bowl, combine the sliced strawberries, granulated sugar, lemon juice. Toss gently to coat the strawberries in the sugar. Let them sit for about 15-20 minutes to allow the juices to release.</li>
+                    <li>To make the whipped cream, pour the chilled heavy cream into a mixing bowl. Add the powdered sugar and the vanilla extract. Using an electric mixer, beat the cream on high speed until stiff peaks form.</li>
+                    <li>To assemble the strawberry shortcakes, slice the cooled shortcakes in half horizontally. Spoon a generous amount of macerated strawberries onto the bottom half of each shortcake. Top with a dollop of whipped cream, then place the other half of the shortcake on top.</li>
+                    <li>Garnish the strawberry shortcakes with additional whipped cream and fresh strawberries, if desired. Serve immediately.</li>
+                </ol>
+                <a href="#gallery-section" class="back-to-menu">← BACK TO MENU</a>
+            </section>
+        </section>
     
-    <!-- RECIPE SECTIONS -->
-    <section id="strawberry-page" class="strawberry-page">
-        <section class="recipe-card">
-            <h1>Strawberry Cake</h1>
-            <h2>Ingredients</h2>
-            <p><b>For the shortcakes:</b></p>
-            <ul>
-                <li>2 cups all-purpose flour</li>
-                <li>1/4 cup granulated sugar</li>
-                <li>1 tablespoon baking powder</li>
-                <li>1/2 teaspoon salt</li>
-                <li>1/2 cup unsalted butter, cold and cut into small cubes</li>
-                <li>2/3 cup milk</li>
-                <li>1 teaspoon vanilla extract</li>
-            </ul>
-            <p><b>For the strawberries</b></p>
-            <ul>
-                <li>1 pound fresh strawberries</li>
-                <li>2-3 tablespoons granulated sugar</li>
-                <li>1 teaspoon lemon juice</li>
-            </ul>
-            <p><b>For the whipped cream:</b></p>
-            <ul>
-                <li>1 cup heavy cream (chilled)</li>
-                <li>2 tablespoons powdered sugar</li>
-                <li>1 teaspoon vanilla extract</li>
-            </ul>
-            <h2>Steps</h2>
-            <ol>
-                <li>Preheat oven to 425°F (220°C). Line a baking sheet with parchment paper or lightly grease it.</li>
-                <li>In a large mixing bowl, whisk together the flour, sugar, baking powder, and salt.</li>
-                <li>Add the cold cubed butter to the flour mixture. Using a pastry cutter or your fingertips, cut the butter into the flour until the mixture resembles coarse crumbs.</li>
-                <li>In a separate bowl, mix together the milk and vanilla extract. Gradually pour the milk mixture into the flour mixture, stirring until just combined. Be careful not to overmix</li>
-                <li>Turn the dough out onto a lightly floured surface. Gently pat the dough into a rectangle about 3/4 inch thick. Use a round cookie cutter or the rim of a glass to cut out circles of dough. Place the dough circles onto the prepared baking sheet, spacing them a few inches apart.</li>
-                <li>Bake the shortcakes in the preheated oven for 12-15 minutes or until they are golden brown. Remove from the oven and transfer to a wire rack to cool completely.</li>
-                <li>While the shortcakes are cooling, prepare the strawberries. In a bowl, combine the sliced strawberries, granulated sugar, lemon juice. Toss gently to coat the strawberries in the sugar. Let them sit for about 15-20 minutes to allow the juices to release.</li>
-                <li>To make the whipped cream, pour the chilled heavy cream into a mixing bowl. Add the powdered sugar and the vanilla extract. Using an electric mixer, beat the cream on high speed until stiff peaks form.</li>
-                <li>To assemble the strawberry shortcakes, slice the cooled shortcakes in half horizontally. Spoon a generous amount of macerated strawberries onto the bottom half of each shortcake. Top with a dollop of whipped cream, then place the other half of the shortcake on top.</li>
-                <li>Garnish the strawberry shortcakes with additional whipped cream and fresh strawberries, if desired. Serve immediately.</li>
-            </ol>
-            <a href="#" class="back-to-menu">← BACK TO MENU</a>
+        <section id="matcha-page" class="matcha-page">
+            <section class="recipe-card">
+                <h1>MATCHA TIRAMISU</h1>
+                <h2>Ingredients</h2>
+                <ul>
+                    <li>12 ladyfingers (savoiardi)</li>
+                    <li>1/2 cup heavy cream (cold)</li>
+                    <li>1/4 cup mascarpone</li>
+                    <li>2 tbsp powdered sugar</li>
+                    <li>1/2 tsp vanilla extract</li>
+                    <li>1/2 cup warm milk</li>
+                    <li>1 tsp matcha powder</li>
+                    <li>1-2 tsp honey (optional)</li>
+                    <li>Fresh raspberries</li>
+                    <li>Extra matcha for dusting</li>
+                </ul>
+                <h3>Steps</h3>
+                <ol>
+                    <li><strong>Matcha Soak:</strong> Whisk matcha with warm milk and honey.</li>
+                    <li><strong>Cream Layer:</strong> Whip heavy cream. Mix mascarpone, sugar, vanilla. Fold in whipped cream.</li>
+                    <li><strong>Assemble:</strong> Dip ladyfingers in matcha. Layer with cream. Repeat.</li>
+                    <li><strong>Finish:</strong> Dust with matcha, top with raspberries. Chill 2 hours.</li>
+                </ol>
+                <a href="#gallery-section" class="back-to-menu">← BACK TO MENU</a>
+            </section>
         </section>
-    </section>
-
-    <section id="matcha-page" class="matcha-page">
-        <section class="recipe-card">
-            <h1>MATCHA TIRAMISU</h1>
-            <h2>Ingredients</h2>
-            <ul>
-                <li>12 ladyfingers (savoiardi)</li>
-                <li>1/2 cup heavy cream (cold)</li>
-                <li>1/4 cup mascarpone</li>
-                <li>2 tbsp powdered sugar</li>
-                <li>1/2 tsp vanilla extract</li>
-                <li>1/2 cup warm milk</li>
-                <li>1 tsp matcha powder</li>
-                <li>1-2 tsp honey (optional)</li>
-                <li>Fresh raspberries</li>
-                <li>Extra matcha for dusting</li>
-            </ul>
-            <h3>Steps</h3>
-            <ol>
-                <li><strong>Matcha Soak:</strong> Whisk matcha with warm milk and honey.</li>
-                <li><strong>Cream Layer:</strong> Whip heavy cream. Mix mascarpone, sugar, vanilla. Fold in whipped cream.</li>
-                <li><strong>Assemble:</strong> Dip ladyfingers in matcha. Layer with cream. Repeat.</li>
-                <li><strong>Finish:</strong> Dust with matcha, top with raspberries. Chill 2 hours.</li>
-            </ol>
-            <a href="#" class="back-to-menu">← BACK TO MENU</a>
+    
+        <section id="apple-page" class="apple-page">
+            <section class="recipe-card">
+                <h1>SPICED APPLE CAKE</h1>
+                <h2>Ingredients</h2>
+                <ul>
+                    <li>2 cups all-purpose flour</li>
+                    <li>1 1/2 tsp baking powder</li>
+                    <li>1/2 tsp baking soda</li>
+                    <li>1 tsp cinnamon</li>
+                    <li>1/2 tsp nutmeg</li>
+                    <li>1/4 tsp cloves</li>
+                    <li>1/2 tsp salt</li>
+                    <li>1/2 cup butter, softened</li>
+                    <li>1 cup brown sugar</li>
+                    <li>2 eggs</li>
+                    <li>1 tsp vanilla</li>
+                    <li>1/2 cup sour cream</li>
+                    <li>2 cups chopped apples</li>
+                </ul>
+                <p><b>Maple Glaze</b></p>
+                <ul>
+                    <li>1 cup powdered sugar</li>
+                    <li>2-3 tbsp maple syrup</li>
+                </ul>
+                <h3>Steps</h3>
+                <ol>
+                    <li>Preheat oven to 350°. Grease a bundt pan.</li>
+                    <li>Whisk dry ingredients together.</li>
+                    <li>Cream butter and sugar. Add eggs, vanilla.</li>
+                    <li>Stir in sour cream, then dry ingredients. Fold in apples.</li>
+                    <li>Bake 40-45 minutes. Cool before glazing.</li>
+                    <li>Whisk glaze ingredients and drizzle over cake.</li>
+                </ol>
+                <a href="#gallery-section" class="back-to-menu">← BACK TO MENU</a>
+            </section>
         </section>
-    </section>
-
-    <section id="apple-page" class="apple-page">
-        <section class="recipe-card">
-            <h1>SPICED APPLE CAKE</h1>
-            <h2>Ingredients</h2>
-            <ul>
-                <li>2 cups all-purpose flour</li>
-                <li>1 1/2 tsp baking powder</li>
-                <li>1/2 tsp baking soda</li>
-                <li>1 tsp cinnamon</li>
-                <li>1/2 tsp nutmeg</li>
-                <li>1/4 tsp cloves</li>
-                <li>1/2 tsp salt</li>
-                <li>1/2 cup butter, softened</li>
-                <li>1 cup brown sugar</li>
-                <li>2 eggs</li>
-                <li>1 tsp vanilla</li>
-                <li>1/2 cup sour cream</li>
-                <li>2 cups chopped apples</li>
-            </ul>
-            <p><b>Maple Glaze</b></p>
-            <ul>
-                <li>1 cup powdered sugar</li>
-                <li>2-3 tbsp maple syrup</li>
-            </ul>
-            <h3>Steps</h3>
-            <ol>
-                <li>Preheat oven to 350°. Grease a bundt pan.</li>
-                <li>Whisk dry ingredients together.</li>
-                <li>Cream butter and sugar. Add eggs, vanilla.</li>
-                <li>Stir in sour cream, then dry ingredients. Fold in apples.</li>
-                <li>Bake 40-45 minutes. Cool before glazing.</li>
-                <li>Whisk glaze ingredients and drizzle over cake.</li>
-            </ol>
-            <a href="#" class="back-to-menu">← BACK TO MENU</a>
+    
+        <section id="granola-page" class="granola-page">
+            <section class="recipe-card">
+                <h1>GRANOLA BARS</h1>
+                <h2>Ingredients</h2>
+                <ul>
+                    <li>2 cups rolled oats</li>
+                    <li>1/2 cup almonds, chopped</li>
+                    <li>1/4 cup sunflower seeds</li>
+                    <li>1/4 cup dried cranberries</li>
+                    <li>1/4 cup shredded coconut</li>
+                    <li>1/3 cup honey or maple syrup</li>
+                    <li>1/4 cup butter</li>
+                    <li>1/2 tsp vanilla</li>
+                    <li>Pinch of salt</li>
+                    <li>1/4 cup chocolate chips (optional)</li>
+                </ul>
+                <h2>Instructions</h2>
+                <ol>
+                    <li><strong>Prep:</strong> Line 8x8 pan with parchment.</li>
+                    <li><strong>Toast:</strong> Bake oats, nuts, seeds at 350°F for 10 minutes.</li>
+                    <li><strong>Heat:</strong> Simmer honey and butter 1-2 minutes. Add vanilla.</li>
+                    <li><strong>Mix:</strong> Combine all ingredients. Press firmly into pan.</li>
+                    <li><strong>Chill:</strong> Refrigerate 2 hours until firm.</li>
+                    <li><strong>Cut:</strong> Slice into 10-12 bars.</li>
+                </ol>
+                <a href="#gallery-section" class="back-to-menu">← BACK TO MENU</a>
+            </section>
         </section>
-    </section>
-
-    <section id="granola-page" class="granola-page">
-        <section class="recipe-card">
-            <h1>GRANOLA BARS</h1>
-            <h2>Ingredients</h2>
-            <ul>
-                <li>2 cups rolled oats</li>
-                <li>1/2 cup almonds, chopped</li>
-                <li>1/4 cup sunflower seeds</li>
-                <li>1/4 cup dried cranberries</li>
-                <li>1/4 cup shredded coconut</li>
-                <li>1/3 cup honey or maple syrup</li>
-                <li>1/4 cup butter</li>
-                <li>1/2 tsp vanilla</li>
-                <li>Pinch of salt</li>
-                <li>1/4 cup chocolate chips (optional)</li>
-            </ul>
-            <h2>Instructions</h2>
-            <ol>
-                <li><strong>Prep:</strong> Line 8x8 pan with parchment.</li>
-                <li><strong>Toast:</strong> Bake oats, nuts, seeds at 350°F for 10 minutes.</li>
-                <li><strong>Heat:</strong> Simmer honey and butter 1-2 minutes. Add vanilla.</li>
-                <li><strong>Mix:</strong> Combine all ingredients. Press firmly into pan.</li>
-                <li><strong>Chill:</strong> Refrigerate 2 hours until firm.</li>
-                <li><strong>Cut:</strong> Slice into 10-12 bars.</li>
-            </ol>
-            <a href="#" class="back-to-menu">← BACK TO MENU</a>
+    
+        <section id="muffin-page" class="muffin-page">
+            <section class="recipe-card">
+                <h1>LEMON BLUEBERRY MUFFINS</h1>
+                <h2>Ingredients</h2>
+                <ul>
+                    <li>2 cups flour</li>
+                    <li>1/2 cup sugar</li>
+                    <li>1/4 cup brown sugar</li>
+                    <li>2 tsp baking powder</li>
+                    <li>1/2 tsp baking soda</li>
+                    <li>1/4 tsp salt</li>
+                    <li>Zest of 2 lemons</li>
+                    <li>3/4 cup buttermilk</li>
+                    <li>1/2 cup melted butter</li>
+                    <li>2 eggs</li>
+                    <li>1 tsp vanilla</li>
+                    <li>1 tbsp lemon juice</li>
+                    <li>1 1/4 cups blueberries</li>
+                </ul>
+                <p><b>Topping:</b> 2 tbsp sugar + 1 tsp lemon zest</p>
+                <h2>Instructions</h2>
+                <ol>
+                    <li>Preheat oven to 375°F. Line muffin tin.</li>
+                    <li>Whisk dry ingredients and zest.</li>
+                    <li>Mix wet ingredients separately.</li>
+                    <li>Combine wet and dry. Fold in blueberries.</li>
+                    <li>Fill cups 3/4 full. Add topping.</li>
+                    <li>Bake 18-22 minutes. Cool 5-10 minutes.</li>
+                </ol>
+                <a href="#gallery-section" class="back-to-menu">← BACK TO MENU</a>
+            </section>
         </section>
-    </section>
-
-    <section id="muffin-page" class="muffin-page">
-        <section class="recipe-card">
-            <h1>LEMON BLUEBERRY MUFFINS</h1>
-            <h2>Ingredients</h2>
-            <ul>
-                <li>2 cups flour</li>
-                <li>1/2 cup sugar</li>
-                <li>1/4 cup brown sugar</li>
-                <li>2 tsp baking powder</li>
-                <li>1/2 tsp baking soda</li>
-                <li>1/4 tsp salt</li>
-                <li>Zest of 2 lemons</li>
-                <li>3/4 cup buttermilk</li>
-                <li>1/2 cup melted butter</li>
-                <li>2 eggs</li>
-                <li>1 tsp vanilla</li>
-                <li>1 tbsp lemon juice</li>
-                <li>1 1/4 cups blueberries</li>
-            </ul>
-            <p><b>Topping:</b> 2 tbsp sugar + 1 tsp lemon zest</p>
-            <h2>Instructions</h2>
-            <ol>
-                <li>Preheat oven to 375°F. Line muffin tin.</li>
-                <li>Whisk dry ingredients and zest.</li>
-                <li>Mix wet ingredients separately.</li>
-                <li>Combine wet and dry. Fold in blueberries.</li>
-                <li>Fill cups 3/4 full. Add topping.</li>
-                <li>Bake 18-22 minutes. Cool 5-10 minutes.</li>
-            </ol>
-            <a href="#" class="back-to-menu">← BACK TO MENU</a>
-        </section>
-    </section>
-
-    <footer>
-        <p>This website is only for educational purposes. All artworks/images/recipes shown belong to their respective artists.</p>
-    </footer>
+    
+        <footer>
+            <p>This website is only for educational purposes. All artworks/images/recipes shown belong to their respective artists.</p>
+        </footer>
+    </div>
 </body>
-
+</html>
    
+
